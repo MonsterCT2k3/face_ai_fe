@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from '../../api/api'
 
 export const get_leaverequests = createAsyncThunk(
-  'leaverequest/get_leaverequest',
+  'leaverequest/get_leaverequests',
   async (
     { parPage, page, searchValue },
     { rejectWithValue, fulfillWithValue }
@@ -31,7 +31,6 @@ export const get_leaverequest_by_id = createAsyncThunk(
       console.log(data)
       return fulfillWithValue(data)
     } catch (error) {
-      // console.log(error.response.data)
       return rejectWithValue(error.response.data)
     }
   }
@@ -74,7 +73,7 @@ export const leaverequestReducer = createSlice({
 
       .addCase(get_leaverequests.fulfilled, (state, { payload }) => {
         state.totalleaverequest = payload.data.totalleaverequest
-        state.leaverequests = payload.data.leaverequests
+        state.leaverequests = payload.data.result
       })
 
       .addCase(update_leaverequest.fulfilled, (state, { payload }) => {

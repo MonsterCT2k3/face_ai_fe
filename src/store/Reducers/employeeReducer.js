@@ -42,15 +42,14 @@ export const get_employees = createAsyncThunk(
 
 export const get_employee_by_id = createAsyncThunk(
   'employee/get_employee_by_id',
-  async (employeeId, { rejectWithValue, fulfillWithValue }) => {
+  async (employee_id, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { data } = await api.get(`/employee/${employeeId}`, {
+      const { data } = await api.get(`/employee/${employee_id}`, {
         withCredentials: true,
       })
       console.log(data)
       return fulfillWithValue(data)
     } catch (error) {
-      // console.log(error.response.data)
       return rejectWithValue(error.response.data)
     }
   }
@@ -118,8 +117,13 @@ export const employeeReducer = createSlice({
         state.employees = [...state.employees, payload.data.employees]
       })
 
+      .addCase(get_employee_by_id.fulfilled, (state, { payload }) => {
+        state.loader = false
+        state.employee = payload.data.employee
+      })
+
       .addCase(get_employees.fulfilled, (state, { payload }) => {
-        state.totalEmployee = payload.data.totalEmployee
+        state.totalEmployee = payload.data.total
         state.employees = payload.data.employees
       })
 
