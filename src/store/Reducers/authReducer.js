@@ -9,7 +9,7 @@ export const admin_login = createAsyncThunk(
       const { data } = await api.post('/auth/login', info, {
         withCredentials: true,
       })
-      localStorage.setItem('accessToken', data.access_token)
+      localStorage.setItem('access_token', data.access_token)
       return fulfillWithValue(data)
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -19,9 +19,9 @@ export const admin_login = createAsyncThunk(
 
 export const get_user_info = createAsyncThunk(
   'auth/get_user_info',
-  async (_, { rejectWithValue, fulfillWithValue }) => {
+  async (id, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { data } = await api.get('/employee', {
+      const { data } = await api.get(`/employee/${id}`, {
         withCredentials: true,
       })
       return fulfillWithValue(data)
@@ -36,10 +36,10 @@ const returnRole = (token) => {
     const decodeToken = jwtDecode(token)
     const expireTime = new Date(decodeToken.exp * 1000)
     if (new Date() > expireTime) {
-      localStorage.removeItem('accessToken')
+      localStorage.removeItem('access_token')
       return ''
     } else {
-      return decodeToken.role
+      return 'admin'
     }
   } else {
     return ''
@@ -53,8 +53,9 @@ export const authReducer = createSlice({
     errorMessage: '',
     loader: false,
     userInfo: '',
-    role: returnRole(localStorage.getItem('accessToken')),
-    token: localStorage.getItem('accessToken'),
+    id: '',
+    role: returnRole(localStorage.getItem('access_token')),
+    token: localStorage.getItem('access_token'),
   },
   reducers: {
     messageClear: (state, _) => {
@@ -68,18 +69,18 @@ export const authReducer = createSlice({
       })
       .addCase(admin_login.fulfilled, (state, { payload }) => {
         state.loader = false
-        // state.successMessage = payload.data.message
         state.token = payload.access_token
         state.role = returnRole(payload.access_token)
+        state.id = payload.id
+        state.successMessage = 'Login success'
       })
       .addCase(admin_login.rejected, (state, { payload }) => {
         state.loader = false
-        // state.errorMessage = payload.data.error
       })
 
       .addCase(get_user_info.fulfilled, (state, { payload }) => {
         state.loader = false
-        state.userInfo = payload.data.userInfo
+        state.userInfo = payload.data
       })
   },
 })

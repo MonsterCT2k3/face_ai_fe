@@ -8,7 +8,7 @@ export const employee_add = createAsyncThunk(
       const formData = new FormData()
       formData.append('name', name)
       formData.append('image', image)
-      const { data } = await api.post('/category-add', formData, {
+      const { data } = await api.post('/auth/register', formData, {
         withCredentials: true,
       })
       return fulfillWithValue(data)
@@ -28,7 +28,7 @@ export const get_employees = createAsyncThunk(
   ) => {
     try {
       const { data } = await api.get(
-        `/employee/getAll?page=${page}&&searchValue=${searchValue}&&parPage=${parPage}`,
+        `/employee/getAll?page=${page}&&searchValue=${searchValue}&&perPage=${parPage}`,
         { withCredentials: true }
       )
       return fulfillWithValue(data)

@@ -225,19 +225,6 @@ const AddProduct = () => {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-4 grid-cols-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4">
-              <button
-                disabled={loader ? true : false}
-                className="bg-slate-800 w-full hover:shadow-blue-300/ hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
-              >
-                {loader ? (
-                  <PropagateLoader cssOverride={overrideStyle} />
-                ) : (
-                  'Nhận diện khuôn mặt'
-                )}
-              </button>
-            </div>
-
             <div className="flex">
               <button className="bg-red-500  hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
                 Add Product

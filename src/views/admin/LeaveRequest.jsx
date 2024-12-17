@@ -6,24 +6,24 @@ import Search from '../components/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
 
-const SellerRequest = () => {
+const LeaveRequest = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
   const [parPage, setParPage] = useState(5)
   const [show, setShow] = useState(false)
 
   const dispatch = useDispatch()
-  const { leaverequests, totalLeaveRequest } = useSelector(
-    (state) => state.leaverequest
-  )
+  const { leaverequests } = useSelector((state) => state.leaverequest)
+
+  console.log(leaverequests)
 
   useEffect(() => {
-    dispatch(get_leaverequests({ parPage, page: currentPage, searchValue }))
-  }, [dispatch, currentPage, parPage, searchValue])
+    dispatch(get_leaverequests())
+  }, [dispatch])
 
   return (
     <div className="px-2 lg:px-7 pt-5">
-      <h1 className="text-[20px] font-bold mb-3"> Seller Request </h1>
+      <h1 className="text-[20px] font-bold mb-3"> Leave Request </h1>
 
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
         <Search
@@ -40,7 +40,10 @@ const SellerRequest = () => {
                   No
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Name
+                  ID Employee
+                </th>
+                <th scope="col" className="py-3 px-4">
+                  Request date
                 </th>
                 <th scope="col" className="py-3 px-4">
                   Start date
@@ -61,44 +64,51 @@ const SellerRequest = () => {
             </thead>
 
             <tbody>
-              {[1, 2, 3, 4, 5].map((d, i) => (
+              {leaverequests.map((d, i) => (
                 <tr className="border-b border-slate-700" key={i}>
                   <td
                     // scope="row"
                     className="py-2 px-4 font-medium whitespace-nowrap"
                   >
-                    {d}
+                    {i + 1}
                   </td>
                   <td
                     // scope="row"
                     className="py-2 px-4 font-medium whitespace-nowrap"
                   >
-                    Kazi Ariyan{' '}
-                  </td>
-                  <td
-                    // scope="row"
-                    className="py-2 px-4 font-medium whitespace-nowrap"
-                  >
-                    12/12/2021
-                  </td>
-                  <td
-                    // scope="row"
-                    className="py-2 px-4 font-medium whitespace-nowrap"
-                  >
-                    12/12/2022
-                  </td>
-                  <td
-                    // scope="row"
-                    className="py-2 px-4 font-medium whitespace-nowrap"
-                  >
-                    Sick
+                    {d.id_employee}
                   </td>
 
                   <td
                     // scope="row"
                     className="py-2 px-4 font-medium whitespace-nowrap"
                   >
-                    <span>Pending</span>{' '}
+                    {d.request_date}
+                  </td>
+                  <td
+                    // scope="row"
+                    className="py-2 px-4 font-medium whitespace-nowrap"
+                  >
+                    {d.start_date}
+                  </td>
+                  <td
+                    // scope="row"
+                    className="py-2 px-4 font-medium whitespace-nowrap"
+                  >
+                    {d.end_date}
+                  </td>
+                  <td
+                    // scope="row"
+                    className="py-2 px-4 font-medium whitespace-nowrap"
+                  >
+                    {d.request_type}
+                  </td>
+
+                  <td
+                    // scope="row"
+                    className="py-2 px-4 font-medium whitespace-nowrap"
+                  >
+                    <span>{d.status}</span>{' '}
                   </td>
 
                   <td
@@ -107,7 +117,7 @@ const SellerRequest = () => {
                   >
                     <div className="flex justify-start items-center gap-4">
                       <Link
-                        to="/admin/dashboard/leave-request/details/2"
+                        to={`/admin/dashboard/leave-request/details/${d.id}`}
                         className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50"
                       >
                         {' '}
@@ -125,7 +135,7 @@ const SellerRequest = () => {
           <Pagination
             pageNumber={currentPage}
             setPageNumber={setCurrentPage}
-            totalItem={totalLeaveRequest}
+            totalItem={50}
             parPage={parPage}
             showItem={3}
           />
@@ -135,4 +145,4 @@ const SellerRequest = () => {
   )
 }
 
-export default SellerRequest
+export default LeaveRequest

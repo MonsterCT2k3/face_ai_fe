@@ -14,7 +14,9 @@ const LeaveRequestDetail = () => {
   const { leaverequest, successMessage } = useSelector(
     (state) => state.leaverequest
   )
-  const { sellerId } = useParams()
+
+  console.log(leaverequest)
+  const { requestId } = useParams()
   const [status, setStatus] = useState('')
 
   useEffect(() => {
@@ -26,18 +28,18 @@ const LeaveRequestDetail = () => {
   }, [successMessage, dispatch])
 
   useEffect(() => {
-    dispatch(get_leaverequest_by_id(sellerId))
-  }, [sellerId, dispatch])
+    dispatch(get_leaverequest_by_id(requestId))
+  }, [requestId, dispatch])
 
   const updateStatus = (e) => {
     e.preventDefault()
     const status = e.target[0].value
-    dispatch(update_leaverequest({ sellerId, status }))
+    dispatch(update_leaverequest({ requestId, status }))
   }
 
   return (
     <div className="px-2 lg:px-7 pt-5">
-      <h1 className="text-[20px] font-bold mb-3"> Seller Details </h1>
+      <h1 className="text-[20px] font-bold mb-3"> Leave Request </h1>
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
         <div className="w-full flex flex-wrap text-[#d0d2d6]">
           <div className="w-4/12">
@@ -47,6 +49,12 @@ const LeaveRequestDetail = () => {
                   <span>Name : </span>
                   <span>Raju Khan </span>
                 </div>
+
+                <div className="flex gap-2 font-bold text-[#000000]">
+                  <span>Request date : </span>
+                  <span>12/12/2222</span>
+                </div>
+
                 <div className="flex gap-2 font-bold text-[#000000]">
                   <span>Start date : </span>
                   <span>12/12/2222</span>

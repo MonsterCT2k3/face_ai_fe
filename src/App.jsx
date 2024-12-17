@@ -7,7 +7,7 @@ import { get_user_info } from './store/Reducers/authReducer'
 
 function App() {
   const dispatch = useDispatch()
-  const { token } = useSelector((state) => state.auth)
+  const { token, id } = useSelector((state) => state.auth)
   const [allRoutes, setAllRoutes] = useState([...publicRoutes])
 
   useEffect(() => {
@@ -15,11 +15,11 @@ function App() {
     setAllRoutes([...publicRoutes, routes])
   }, [])
 
-  useEffect(() => {
-    if (token) {
-      dispatch(get_user_info())
-    }
-  }, [token, dispatch])
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(get_user_info(id))
+  //   }
+  // }, [token, id, dispatch])
 
   return <Router allRoutes={allRoutes} />
 }

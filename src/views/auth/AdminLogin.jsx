@@ -47,7 +47,7 @@ const AdminLogin = () => {
     if (successMessage) {
       toast.success(successMessage)
       dispatch(messageClear())
-      navigate('/')
+      window.location.href = '/admin/dashboard'
     }
   }, [errorMessage, successMessage, dispatch, navigate])
 
@@ -56,14 +56,7 @@ const AdminLogin = () => {
       <div className="w-[350px] text-[#ffffff] p-2">
         <div className="bg-[#6f68d1] p-4 rounded-md">
           <div className="h-[70px] flex justify-center items-center">
-            <div className="w-[180px] h-[50px]">
-              <img
-                className="w-full h-full"
-                src="http://localhost:3000/images/logo.png"
-                alt=""
-                aria-hidden="true"
-              />
-            </div>
+            <h1 className="text-[20px] font-bold">Admin Login</h1>
           </div>
           <form onSubmit={submit}>
             <div className="flex flex-col w-full gap-1 mb-3">

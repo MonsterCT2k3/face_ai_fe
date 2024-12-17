@@ -3,10 +3,9 @@ import { privateRoutes } from './privateRoutes'
 import ProtectRoutes from './ProtectRoutes'
 
 export const getRoutes = () => {
-  privateRoutes.map((route) => ({
-    ...route,
-    element: <ProtectRoutes route={route}>{route.element}</ProtectRoutes>,
-  }))
+  privateRoutes.map((r) => {
+    r.element = <ProtectRoutes route={r}>{r.element}</ProtectRoutes>
+  })
 
   return {
     path: '/',
