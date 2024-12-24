@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import LeaveRequestDetail from '../../views/admin/LeaveRequestDetail'
 import EditEmployee from '../../views/admin/EditEmployee'
+import Attendances from '../../views/admin/Attendances'
 const AdminDashboard = lazy(() => import('../../views/admin/AdminDashboard'))
 const Employees = lazy(() => import('../../views/admin/Employees'))
 const SellerRequest = lazy(() => import('../../views/admin/LeaveRequest'))
@@ -20,7 +21,7 @@ export const adminRoutes = [
   },
 
   {
-    path: 'admin/dashboard/leave-request/details/:leaveId',
+    path: 'admin/dashboard/leave-request/details/:requestId',
     element: <LeaveRequestDetail />,
     role: 'admin',
   },
@@ -42,8 +43,13 @@ export const adminRoutes = [
     role: 'admin',
   },
   {
-    path: 'admin/dashboard/employee/details/:employeeid',
+    path: 'admin/dashboard/employee/details/:employeeId',
     element: <EmployeeDetail />,
+    role: 'admin',
+  },
+  {
+    path: 'admin/dashboard/attendances',
+    element: <Attendances />,
     role: 'admin',
   },
 ]

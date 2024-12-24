@@ -8,7 +8,7 @@ const EmployeeDetail = () => {
   const { employeeId } = useParams()
 
   const dispatch = useDispatch()
-  // const { employee } = useSelector((state) => state.employee)
+  const { employee } = useSelector((state) => state.employee)
 
   useEffect(() => {
     dispatch(
@@ -21,18 +21,10 @@ const EmployeeDetail = () => {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(get_employee_by_id(employeeId))
+    dispatch(get_employee_by_id(Number(employeeId)))
   }, [employeeId, dispatch])
 
-  const [state, setState] = useState({
-    name: 'John Doe',
-    username: 'john_doe',
-    email: 'john@gmail.com',
-    phone: '1234567890',
-    id_employee: '1234',
-    department: 'HR',
-    address: 'New York',
-  })
+  const [state, setState] = useState(employee)
 
   const inputHandle = (e) => {
     setState({
@@ -75,24 +67,11 @@ const EmployeeDetail = () => {
                 <input
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.name}
+                  value={employee.name}
                   type="text"
                   name="name"
                   id="name"
                   placeholder="Employee Name"
-                />
-              </div>
-
-              <div className="flex flex-col w-full gap-1">
-                <label htmlFor="brand">Username</label>
-                <input
-                  readOnly
-                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.username}
-                  type="text"
-                  name="username"
-                  id="username"
-                  placeholder="Username"
                 />
               </div>
             </div>
@@ -103,7 +82,7 @@ const EmployeeDetail = () => {
                 <input
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.email}
+                  value={employee.email}
                   type="text"
                   name="email"
                   id="email"
@@ -116,7 +95,7 @@ const EmployeeDetail = () => {
                 <input
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.phone}
+                  value={employee.phone}
                   type="text"
                   name="phone"
                   id="phone"
@@ -131,7 +110,7 @@ const EmployeeDetail = () => {
                 <input
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.id_employee}
+                  value={employee.id}
                   type="text"
                   name="id"
                   id="id"
@@ -144,7 +123,7 @@ const EmployeeDetail = () => {
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
                   onChange={inputHandle}
-                  value={state.department}
+                  value={employee.department}
                   type="text"
                   id="department"
                 />
@@ -170,7 +149,7 @@ const EmployeeDetail = () => {
                 <input
                   readOnly
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  value={state.address}
+                  value={employee.address}
                   type="text"
                   name="address"
                   id="address"

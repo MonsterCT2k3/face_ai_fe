@@ -3,12 +3,9 @@ import api from '../../api/api'
 
 export const employee_add = createAsyncThunk(
   'employee/employee_add',
-  async ({ name, image }, { rejectWithValue, fulfillWithValue }) => {
+  async (employee, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const formData = new FormData()
-      formData.append('name', name)
-      formData.append('image', image)
-      const { data } = await api.post('/auth/register', formData, {
+      const { data } = await api.post('/auth/register', employee, {
         withCredentials: true,
       })
       return fulfillWithValue(data)
@@ -26,10 +23,19 @@ export const get_employees = createAsyncThunk(
     { parPage, page, searchValue },
     { rejectWithValue, fulfillWithValue }
   ) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
     try {
       const { data } = await api.get(
         `/employee/getAll?page=${page}&&searchValue=${searchValue}&&perPage=${parPage}`,
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          },
+          withCredentials: true,
+        }
       )
       return fulfillWithValue(data)
     } catch (error) {
@@ -109,22 +115,22 @@ export const employeeReducer = createSlice({
       })
       .addCase(employee_add.rejected, (state, { payload }) => {
         state.loader = false
-        state.errorMessage = payload.data.error
+        state.errorMessage = payload.error
       })
       .addCase(employee_add.fulfilled, (state, { payload }) => {
         state.loader = false
-        state.successMessage = payload.data.message
-        state.employees = [...state.employees, payload.data.employees]
+        state.successMessage = payload.msg
+        // state.employees = [...state.employees, payload.data.employees]
       })
 
       .addCase(get_employee_by_id.fulfilled, (state, { payload }) => {
         state.loader = false
-        state.employee = payload.data.employee
+        state.employee = payload.employee
       })
 
       .addCase(get_employees.fulfilled, (state, { payload }) => {
-        state.totalEmployee = payload.data.total
-        state.employees = payload.data.employees
+        state.totalEmployee = payload.total
+        state.employees = payload.employees
       })
 
       .addCase(update_employee.fulfilled, (state, { payload }) => {

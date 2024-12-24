@@ -11,12 +11,14 @@ import Search from '../components/Search'
 
 const Sellers = () => {
   const dispatch = useDispatch()
-  const { employee, totalEmployee } = useSelector((state) => state.employee)
+  const { employees, totalEmployee } = useSelector((state) => state.employee)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
   const [parPage, setParPage] = useState(5)
   const [show, setShow] = useState(false)
+
+  console.log(employees)
 
   useEffect(() => {
     const obj = {
@@ -28,7 +30,7 @@ const Sellers = () => {
   }, [searchValue, currentPage, parPage, dispatch])
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure to delete category?')) {
+    if (window.confirm('Are you sure to delete employee?')) {
       console.log('delete category id', id)
       dispatch(delete_employee(id))
     }
@@ -78,43 +80,43 @@ const Sellers = () => {
             </thead>
 
             <tbody>
-              {[1, 2, 3, 4, 5].map((d, i) => (
+              {employees.map((d, i) => (
                 <tr key={i}>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    {d}
+                    {i + 1}
                   </td>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    ariyan
+                    {d.username}
                   </td>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    Kazi Ariyan
+                    {d.name}
                   </td>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    abc@gmail.com
+                    {d.email}
                   </td>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    male
+                    {d.gender}
                   </td>
                   <td
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    0123456789
+                    {d.phone}
                   </td>
 
                   <td
@@ -128,7 +130,7 @@ const Sellers = () => {
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    HaNoi
+                    {d.address}
                   </td>
 
                   <td
@@ -144,7 +146,7 @@ const Sellers = () => {
                         <FaEdit />{' '}
                       </Link>
                       <Link
-                        to="/admin/dashboard/employee/details/2"
+                        to={`/admin/dashboard/employee/details/${d.id}`}
                         className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50"
                       >
                         {' '}
@@ -152,7 +154,7 @@ const Sellers = () => {
                       </Link>
                       <Link
                         className="p-[6px] bg-red-500 rounded hover:shadow-lg hover:shadow-red-500/50"
-                        onClick={() => handleDelete(d._id)}
+                        onClick={() => handleDelete(d.id)}
                       >
                         {' '}
                         <FaTrash />{' '}

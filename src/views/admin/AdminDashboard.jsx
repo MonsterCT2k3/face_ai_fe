@@ -1,6 +1,7 @@
 import { FaUsers } from 'react-icons/fa'
 import Chart from 'react-apexcharts'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const AdminDashboard = () => {
   const state = {
@@ -90,6 +91,40 @@ const AdminDashboard = () => {
       ],
     },
   }
+
+  const times = [
+    {
+      name: 'day',
+    },
+    {
+      name: 'month',
+    },
+    {
+      name: 'year',
+    },
+  ]
+
+  const statusList = [
+    {
+      name: 'di lam',
+    },
+    {
+      name: 'di muon',
+    },
+    {
+      name: 'nghi phep',
+    },
+    {
+      name: 'nghi khong phep',
+    },
+  ]
+
+  const [time, setTime] = useState('')
+  const [status, setStatus] = useState('')
+  const [timeShow, setTimeShow] = useState(false)
+  const [statusShow, setStatusShow] = useState(false)
+  const [allTime, setAllTime] = useState(times)
+  const [allStatus, setAllStatus] = useState(statusList)
 
   return (
     <div className="px-2 md:px-7 py-5">
@@ -235,12 +270,90 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
+      <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-lg text-[#d0d2d6] pb-3 ">
-            Recent Orders
+          <h2 className=" font-semibold text-lg text-[#d0d2d6] pb-3 ">
+            Attandance
           </h2>
-          <Link className="font-semibold text-sm text-[#d0d2d6]">View All</Link>
+          <div className="flex justify-end items-center">
+            <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
+              <div className="flex flex-col w-full gap-1 relative">
+                <input
+                  readOnly
+                  onClick={() => setTimeShow(!timeShow)}
+                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
+                  // onChange={inputHandle}
+                  value={time}
+                  type="text"
+                  id="time"
+                  placeholder="--select Time--"
+                />
+
+                <div
+                  className={`absolute z-50 top-[101%] bg-[#475569] w-full transition-all ${
+                    timeShow ? 'scale-100' : 'scale-0'
+                  } `}
+                >
+                  <div className="flex justify-start items-start flex-col h-[200px] overflow-x-scrool">
+                    {times.map((c, i) => (
+                      <span
+                        key={i}
+                        className={`px-4 py-2 hover:bg-indigo-500 hover:text-white hover:shadow-lg w-full cursor-pointer ${
+                          time === c.name && 'bg-indigo-500'
+                        }`}
+                        onClick={() => {
+                          setTimeShow(false)
+                          setTime(c.name)
+
+                          setAllTime(times)
+                        }}
+                      >
+                        {c.name}{' '}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full gap-1 relative">
+                <input
+                  readOnly
+                  onClick={() => setStatusShow(!statusShow)}
+                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
+                  // onChange={inputHandle}
+                  value={status}
+                  type="text"
+                  id="status"
+                  placeholder="--select status--"
+                />
+
+                <div
+                  className={`absolute z-50 top-[101%] bg-[#475569] w-full transition-all ${
+                    statusShow ? 'scale-100' : 'scale-0'
+                  } `}
+                >
+                  <div className="flex justify-start items-start flex-col h-[200px] overflow-x-scrool">
+                    {statusList.map((c, i) => (
+                      <span
+                        key={i}
+                        className={`px-4 py-2 hover:bg-indigo-500 hover:text-white hover:shadow-lg w-full cursor-pointer ${
+                          status === c.name && 'bg-indigo-500'
+                        }`}
+                        onClick={() => {
+                          setStatusShow(false)
+                          setStatus(c.name)
+
+                          setAllStatus(statusList)
+                        }}
+                      >
+                        {c.name}{' '}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left text-[#d0d2d6]">
@@ -302,7 +415,7 @@ const AdminDashboard = () => {
             </tbody>
           </table>
         </div>
-      </div> */}
+      </div>
     </div>
   )
 }

@@ -16,29 +16,19 @@ const EditEmployee = () => {
 
   const dispatch = useDispatch()
   const { departments } = useSelector((state) => state.department)
-  const { loader, successMessage, errorMessage } = useSelector(
+  const { loader, successMessage, errorMessage, employee } = useSelector(
     (state) => state.employee
   )
 
-  const employee = {
-    name: 'John Doe',
-    username: 'john_doe',
-    email: 'john@gmail.com',
-    phone: '1234567890',
-    id_employee: '1234',
-    department: 'HR',
-    address: 'New York',
-  }
-
-  useEffect(() => {
-    dispatch(
-      get_department({
-        page: '',
-        perPage: '',
-        searchValue: '',
-      })
-    )
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(
+  //     get_department({
+  //       page: '',
+  //       perPage: '',
+  //       searchValue: '',
+  //     })
+  //   )
+  // }, [dispatch])
 
   useEffect(() => {
     dispatch(get_employee_by_id(employeeId))

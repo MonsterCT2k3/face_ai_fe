@@ -25,6 +25,13 @@ export const allNav = [
     role: 'admin',
     path: '/admin/dashboard/addemployee',
   },
+  {
+    id: 6,
+    title: 'Attendances',
+    icon: <FaCodePullRequest />,
+    role: 'admin',
+    path: '/admin/dashboard/attendances',
+  },
 
   {
     id: 7,

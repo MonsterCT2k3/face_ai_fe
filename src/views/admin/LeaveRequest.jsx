@@ -5,6 +5,7 @@ import { FaEye } from 'react-icons/fa'
 import Search from '../components/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
+import LeaveRequestDetail from './LeaveRequestDetail'
 
 const LeaveRequest = () => {
   const [currentPage, setCurrentPage] = useState(1)
