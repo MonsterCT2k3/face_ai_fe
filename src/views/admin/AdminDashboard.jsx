@@ -1,7 +1,11 @@
 import { FaUsers } from 'react-icons/fa'
 import Chart from 'react-apexcharts'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { get_employees } from '../../store/Reducers/employeeReducer'
+import { get_attendances } from '../../store/Reducers/attendanceReducer'
+import { format } from 'date-fns'
 
 const AdminDashboard = () => {
   const state = {
@@ -125,6 +129,38 @@ const AdminDashboard = () => {
   const [statusShow, setStatusShow] = useState(false)
   const [allTime, setAllTime] = useState(times)
   const [allStatus, setAllStatus] = useState(statusList)
+
+  const dispatch = useDispatch()
+  const { totalEmployee } = useSelector((state) => state.employee)
+  const { summary_late, summary_absent, summary_worked } = useSelector(
+    (state) => state.attendance
+  )
+
+  console.log(totalEmployee)
+  console.log(summary_late, summary_absent, summary_worked)
+
+  useEffect(() => {
+    dispatch(
+      get_employees({
+        parPage: 10,
+        page: 1,
+        searchValue: '',
+      })
+    )
+  }, [dispatch])
+
+  useEffect(() => {
+    // Chuyển đổi startDate và endDate sang định dạng yyyy-mm-dd
+    const formattedStartDate = format(new Date(), 'yyyy-MM-dd')
+    const formattedEndDate = format(new Date(), 'yyyy-MM-dd')
+
+    dispatch(
+      get_attendances({
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+      })
+    )
+  }, [dispatch])
 
   return (
     <div className="px-2 md:px-7 py-5">

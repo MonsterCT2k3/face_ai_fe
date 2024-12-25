@@ -24,13 +24,41 @@ export const get_leaverequests = createAsyncThunk(
   }
 )
 
-// End Method
+export const update_status_leave_request = createAsyncThunk(
+  'leaverequest/update_status_leave_request',
+  async ({ info }, { rejectWithValue, fulfillWithValue }) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
+    const { status, requestId } = info
+    try {
+      const { data } = await api.post(`/leave_request/${status}/${requestId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to header
+        },
+        withCredentials: true,
+      })
+      console.log(data)
+      return fulfillWithValue(data)
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
 
 export const get_leaverequest_by_id = createAsyncThunk(
   'leaverequest/get_leaverequest_by_id',
   async (leaverequestId, { rejectWithValue, fulfillWithValue }) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
     try {
-      const { data } = await api.get(`/leaverequest/${leaverequestId}`, {
+      const { data } = await api.get(`/leave_request/${leaverequestId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to header
+        },
         withCredentials: true,
       })
       console.log(data)
@@ -96,6 +124,32 @@ export const leaverequestReducer = createSlice({
         state.loader = false
         state.errorMessage = payload.error
       })
+
+      .addCase(update_status_leave_request.fulfilled, (state, { payload }) => {
+        state.loader = false
+        state.successMessage = payload.message
+      })
+
+      .addCase(update_status_leave_request.rejected, (state, { payload }) => {
+        state.loader = false
+        // state.errorMessage = payload.error
+      })
+
+    // .addCase(
+    //   update_status_reject_leave_request.fulfilled,
+    //   (state, { payload }) => {
+    //     state.loader = false
+    //     state.successMessage = payload.message
+    //   }
+    // )
+
+    // .addCase(
+    //   update_status_reject_leave_request.rejected,
+    //   (state, { payload }) => {
+    //     state.loader = false
+    //     state.errorMessage = payload.error
+    //   }
+    // )
   },
 })
 export const { messageClear } = leaverequestReducer.actions

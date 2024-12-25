@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import {
   messageClear,
-  update_leaverequest,
   get_leaverequest_by_id,
+  update_status_leave_request,
 } from '../../store/Reducers/leaveRequestReducer'
 
 const LeaveRequestDetail = () => {
@@ -23,24 +23,21 @@ const LeaveRequestDetail = () => {
     (request) => request.id === Number(requestId)
   )
 
-  console.log(requestId, employee)
-
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage)
       dispatch(messageClear())
       setStatus('')
+      window.location.reload()
     }
   }, [successMessage, dispatch])
 
   useEffect(() => {
-    dispatch(get_leaverequest_by_id(requestId))
+    dispatch(get_leaverequest_by_id(Number(requestId)))
   }, [requestId, dispatch])
 
-  const updateStatus = (e) => {
-    e.preventDefault()
-    const status = e.target[0].value
-    dispatch(update_leaverequest({ requestId, status }))
+  const changeStatus = (status) => {
+    dispatch(update_status_leave_request(Number(requestId)), status)
   }
 
   return (
@@ -96,23 +93,21 @@ const LeaveRequestDetail = () => {
           </div>
         )}
 
-        <div>
-          <form onSubmit={updateStatus}>
-            <div className="flex gap-4 py-3">
-              <select
-                className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                name=""
-                id=""
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="">--Select Status--</option>
-                <option value="seen">Seen</option>
-              </select>
-              <button className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2">
-                Submit
-              </button>
-            </div>
-          </form>
+        <div className="px-4">
+          <div className="flex gap-4 py-3">
+            <button
+              onClick={changeStatus('reject')}
+              className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
+            >
+              Reject
+            </button>
+            <button
+              onClick={changeStatus('approve')}
+              className="bg-green-500 w-[170px] hover:shadow-green-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
+            >
+              Approve
+            </button>
+          </div>
         </div>
       </div>
     </div>
