@@ -26,21 +26,27 @@ export const get_leaverequests = createAsyncThunk(
 
 export const update_status_leave_request = createAsyncThunk(
   'leaverequest/update_status_leave_request',
-  async ({ info }, { rejectWithValue, fulfillWithValue }) => {
+  async ({ status, id }, { rejectWithValue, fulfillWithValue }) => {
     const token = localStorage.getItem('access_token')
     if (!token) {
       return rejectWithValue('No access token available') // Handle token absence
     }
-    const { status, requestId } = info
     try {
-      const { data } = await api.post(`/leave_request/${status}/${requestId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to header
-        },
-        withCredentials: true,
-      })
-      console.log(data)
-      return fulfillWithValue(data)
+      if (status === 'approve') {
+        const { data } = await api.post(`/leave_request/approve/${id}`,{}, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          }
+        })
+        return fulfillWithValue(data)
+      } else {
+        const { data } = await api.post(`/leave_request/reject/${id}`,{}, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          },
+        })
+        return fulfillWithValue(data)
+      }
     } catch (error) {
       return rejectWithValue(error.response.data)
     }

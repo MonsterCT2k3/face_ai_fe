@@ -9,6 +9,9 @@ export const admin_login = createAsyncThunk(
       const { data } = await api.post('/auth/login', info, {
         withCredentials: true,
       })
+      document.cookie = `access_token=${data.access_token}; path=/; max-age=${
+        7 * 24 * 60 * 60
+      }`
       localStorage.setItem('access_token', data.access_token)
       return fulfillWithValue(data)
     } catch (error) {

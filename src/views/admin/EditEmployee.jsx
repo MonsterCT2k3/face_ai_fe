@@ -15,20 +15,29 @@ const EditEmployee = () => {
   const { employeeId } = useParams()
 
   const dispatch = useDispatch()
-  const { departments } = useSelector((state) => state.department)
-  const { loader, successMessage, errorMessage, employee } = useSelector(
+  
+  const {  successMessage, errorMessage, employee } = useSelector(
     (state) => state.employee
   )
 
-  // useEffect(() => {
-  //   dispatch(
-  //     get_department({
-  //       page: '',
-  //       perPage: '',
-  //       searchValue: '',
-  //     })
-  //   )
-  // }, [dispatch])
+  const departments = [
+    { id_department: 1, name: 'Phòng Quản Lý Đào Tạo' },
+    { id_department: 2, name: 'Phòng Khảo Thí' },
+    { id_department: 3, name: 'Phòng Công Nghệ Thông Tin' },
+    { id_department: 4, name: 'Phòng An Toàn Thông Tin' },
+    { id_department: 5, name: 'Phòng Điện Tử Viễn Thông' },
+  ]
+
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage)
+      dispatch(messageClear())
+    }
+    if (errorMessage) {
+      toast.error(errorMessage)
+      dispatch(messageClear())
+    }
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(get_employee_by_id(employeeId))
@@ -75,6 +84,7 @@ const EditEmployee = () => {
       setalldepartment(departments)
     }
   }
+  console.log(state)
 
   useEffect(() => {
     setState({
@@ -112,8 +122,7 @@ const EditEmployee = () => {
 
   const update = (e) => {
     e.preventDefault()
-    const obj = {}
-    dispatch(update_employee(obj))
+    dispatch(update_employee({ id: employeeId, data: state }))
   }
 
   return (
@@ -124,9 +133,7 @@ const EditEmployee = () => {
           <Link
             to="/admin/dashboard/employees"
             className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-sm px-7 py-2 my-2"
-          >
-            All Employee
-          </Link>
+          ></Link>
         </div>
         <div>
           <form onSubmit={update}>
@@ -192,7 +199,7 @@ const EditEmployee = () => {
                 <input
                   className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
                   onChange={inputHandle}
-                  value={state.id}
+                  value={state.id_employee}
                   type="text"
                   name="id"
                   id="id"
@@ -229,7 +236,7 @@ const EditEmployee = () => {
                   </div>
                   <div className="pt-14"></div>
                   <div className="flex justify-start items-start flex-col h-[200px] overflow-x-scrool">
-                    {[1, 2, 3, 4].map((c, i) => (
+                    {departments.map((c, i) => (
                       <span
                         className={`px-4 py-2 hover:bg-indigo-500 hover:text-white hover:shadow-lg w-full cursor-pointer ${
                           department === c.name && 'bg-indigo-500'
@@ -279,7 +286,7 @@ const EditEmployee = () => {
 
             <div className="flex">
               <button className="bg-red-500  hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
-                Update Product
+                Update
               </button>
             </div>
           </form>

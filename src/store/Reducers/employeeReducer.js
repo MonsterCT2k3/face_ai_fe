@@ -4,8 +4,15 @@ import api from '../../api/api'
 export const employee_add = createAsyncThunk(
   'employee/employee_add',
   async (employee, { rejectWithValue, fulfillWithValue }) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
     try {
       const { data } = await api.post('/auth/register', employee, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to header
+        },
         withCredentials: true,
       })
       return fulfillWithValue(data)
@@ -63,13 +70,18 @@ export const get_employee_by_id = createAsyncThunk(
 
 export const update_employee = createAsyncThunk(
   'employee/update_employee',
-  async (product, { rejectWithValue, fulfillWithValue }) => {
-    const { id } = product.id
+  async ({id, dataObj}, { rejectWithValue, fulfillWithValue }) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
     try {
-      const { data } = await api.post(`/employee/update/${id}`, product, {
+      const { data } = await api.put(`/employee/update/${id}`,dataObj, {
+        headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          },
         withCredentials: true,
       })
-      console.log(data)
       return fulfillWithValue(data)
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -82,8 +94,20 @@ export const update_employee = createAsyncThunk(
 export const delete_employee = createAsyncThunk(
   'employee/delete_employee',
   async (id, { rejectWithValue }) => {
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      return rejectWithValue('No access token available') // Handle token absence
+    }
     try {
-      const response = await api.delete(`/employee/delete/${id}`)
+      const response = await api.post(
+        `/employee/delete/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          }
+        }
+      )
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data.message)
@@ -120,7 +144,6 @@ export const employeeReducer = createSlice({
       .addCase(employee_add.fulfilled, (state, { payload }) => {
         state.loader = false
         state.successMessage = payload.msg
-        // state.employees = [...state.employees, payload.data.employees]
       })
 
       .addCase(get_employee_by_id.fulfilled, (state, { payload }) => {
@@ -137,7 +160,7 @@ export const employeeReducer = createSlice({
         state.loader = false
         state.successMessage = payload.data.message
         const index = state.employees.findIndex(
-          (cat) => cat._id === payload.data.employee._id
+          (e) => e.id_employee === payload.data.employee.id_employee
         )
         if (index !== -1) {
           state.employees[index] = payload.data.employee
@@ -146,7 +169,7 @@ export const employeeReducer = createSlice({
 
       .addCase(update_employee.rejected, (state, { payload }) => {
         state.loader = false
-        state.errorMessage = payload.error
+        state.errorMessage = payload
       })
 
       .addCase(delete_employee.fulfilled, (state, action) => {

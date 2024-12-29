@@ -12,7 +12,7 @@ const ProtectRoute = ({ route, children }) => {
     // Nếu không có token trong cookies, chuyển hướng về login
     return <Navigate to="/auth/login" replace />
   } else {
-    Cookies.set('access_token', token, { expires: 7 }) // Set token vào cookies
+    // Cookies.set('access_token', token, { expires: 7 }) // Set token vào cookies
     return <Suspense fallback={null}>{children}</Suspense>
   }
 

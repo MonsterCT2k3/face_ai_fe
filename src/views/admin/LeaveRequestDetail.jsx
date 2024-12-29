@@ -32,12 +32,14 @@ const LeaveRequestDetail = () => {
     }
   }, [successMessage, dispatch])
 
-  useEffect(() => {
-    dispatch(get_leaverequest_by_id(Number(requestId)))
-  }, [requestId, dispatch])
+  // useEffect(() => {
+  //   dispatch(get_leaverequest_by_id(Number(requestId)))
+  // }, [requestId, dispatch])
 
   const changeStatus = (status) => {
-    dispatch(update_status_leave_request(Number(requestId)), status)
+    console.log(status, requestId)
+    const id = Number(requestId)
+    dispatch(update_status_leave_request({ status, id }))
   }
 
   return (
@@ -96,13 +98,16 @@ const LeaveRequestDetail = () => {
         <div className="px-4">
           <div className="flex gap-4 py-3">
             <button
-              onClick={changeStatus('reject')}
+              onClick={() => changeStatus('reject')}
               className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
             >
               Reject
             </button>
             <button
-              onClick={changeStatus('approve')}
+              onClick={() => changeStatus('approve')}
+              // onClick={() =>
+              //   update_status_leave_request('approve', Number(requestId))
+              // }
               className="bg-green-500 w-[170px] hover:shadow-green-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
             >
               Approve

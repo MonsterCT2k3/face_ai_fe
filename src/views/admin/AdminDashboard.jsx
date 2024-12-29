@@ -1,143 +1,39 @@
 import { FaUsers } from 'react-icons/fa'
-import Chart from 'react-apexcharts'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_employees } from '../../store/Reducers/employeeReducer'
 import { get_attendances } from '../../store/Reducers/attendanceReducer'
 import { format } from 'date-fns'
+import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
+import ChartAttendance from './Chart'
 
 const AdminDashboard = () => {
-  const state = {
-    series: [
-      {
-        name: 'Orders',
-        data: [23, 34, 45, 56, 76, 34, 23, 76, 87, 78, 34, 45],
-      },
-      {
-        name: 'Revenue',
-        data: [67, 39, 45, 56, 90, 56, 23, 56, 87, 78, 67, 78],
-      },
-      {
-        name: 'Sellers',
-        data: [34, 39, 56, 56, 80, 67, 23, 56, 98, 78, 45, 56],
-      },
-    ],
-    options: {
-      color: ['#181ee8', '#181ee8'],
-      plotOptions: {
-        radius: 30,
-      },
-      chart: {
-        background: 'transparent',
-        foreColor: '#d0d2d6',
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      strock: {
-        show: true,
-        curve: ['smooth', 'straight', 'stepline'],
-        lineCap: 'butt',
-        colors: '#f0f0f0',
-        width: 0.5,
-        dashArray: 0,
-      },
-      xaxis: {
-        categories: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apl',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ],
-      },
-      legend: {
-        position: 'top',
-      },
-      responsive: [
-        {
-          breakpoint: 565,
-          yaxis: {
-            categories: [
-              'Jan',
-              'Feb',
-              'Mar',
-              'Apl',
-              'May',
-              'Jun',
-              'Jul',
-              'Aug',
-              'Sep',
-              'Oct',
-              'Nov',
-              'Dec',
-            ],
-          },
-          options: {
-            plotOptions: {
-              bar: {
-                horizontal: true,
-              },
-            },
-            chart: {
-              height: '550px',
-            },
-          },
-        },
-      ],
-    },
-  }
-
-  const times = [
-    {
-      name: 'day',
-    },
-    {
-      name: 'month',
-    },
-    {
-      name: 'year',
-    },
-  ]
-
-  const statusList = [
-    {
-      name: 'di lam',
-    },
-    {
-      name: 'di muon',
-    },
-    {
-      name: 'nghi phep',
-    },
-    {
-      name: 'nghi khong phep',
-    },
-  ]
-
-  const [time, setTime] = useState('')
-  const [status, setStatus] = useState('')
-  const [timeShow, setTimeShow] = useState(false)
-  const [statusShow, setStatusShow] = useState(false)
-  const [allTime, setAllTime] = useState(times)
-  const [allStatus, setAllStatus] = useState(statusList)
-
   const dispatch = useDispatch()
   const { totalEmployee } = useSelector((state) => state.employee)
-  const { summary_late, summary_absent, summary_worked } = useSelector(
-    (state) => state.attendance
-  )
+  const { attendances, summary_late, summary_absent, summary_worked } =
+    useSelector((state) => state.attendance)
 
-  console.log(totalEmployee)
-  console.log(summary_late, summary_absent, summary_worked)
+  const { leaverequests } = useSelector((state) => state.leaverequest)
+  const [recentPendingRequests, setRecentPendingRequests] = useState([])
+  useEffect(() => {
+    dispatch(get_leaverequests())
+  }, [])
+
+  useEffect(() => {
+    // Lọc ra các yêu cầu nghỉ phép có status là "pending"
+    const pendingRequests = leaverequests.filter(
+      (request) => request.status === 'pending'
+    )
+
+    // Sắp xếp các yêu cầu nghỉ phép theo request_date từ mới nhất đến cũ nhất
+    const sortedRequests = pendingRequests.sort(
+      (a, b) => new Date(b.request_date) - new Date(a.request_date)
+    )
+
+    // Lấy 3 yêu cầu nghỉ phép gần nhất
+    setRecentPendingRequests(sortedRequests.slice(0, 3))
+  }, [leaverequests])
 
   useEffect(() => {
     dispatch(
@@ -162,24 +58,29 @@ const AdminDashboard = () => {
     )
   }, [dispatch])
 
+  const filteredRequests = leaverequests
+    .filter((request) => request.status === 'Pending') // Filter requests by status 'pending'
+    .sort((a, b) => new Date(b.request_date) - new Date(a.request_date)) // Sort by most recent request_date
+    .slice(0, 3) // Get the top 3 most recent requests
+
   return (
     <div className="px-2 md:px-7 py-5">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-7">
-        {/* <div className="flex justify-between items-center p-5 bg-[#fae8e8] rounded-md gap-3">
+        <div className="flex justify-between items-center p-5 bg-[#fae8e8] rounded-md gap-3">
           <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-            <h2 className="text-3xl font-bold">$3434</h2>
-            <span className="text-md font-medium">Total Salse</span>
+            <h2 className="text-3xl font-bold">{totalEmployee}</h2>
+            <span className="text-md font-medium">Total Employee</span>
           </div>
 
           <div className="w-[40px] h-[47px] rounded-full bg-[#fa0305] flex justify-center items-center text-xl">
             <FaUsers className="text-[#fae8e8] shadow-lg" />
           </div>
-        </div> */}
+        </div>
 
         <div className="flex justify-between items-center p-5 bg-[#fde2ff] rounded-md gap-3">
           <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-            <h2 className="text-3xl font-bold">50</h2>
-            <span className="text-md font-medium">Tổng NV</span>
+            <h2 className="text-3xl font-bold">{summary_worked}</h2>
+            <span className="text-md font-medium">Worked</span>
           </div>
 
           <div className="w-[40px] h-[47px] rounded-full bg-[#760077] flex justify-center items-center text-xl">
@@ -189,8 +90,10 @@ const AdminDashboard = () => {
 
         <div className="flex justify-between items-center p-5 bg-[#e9feea] rounded-md gap-3">
           <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-            <h2 className="text-3xl font-bold">10</h2>
-            <span className="text-md font-medium">Đi muộn</span>
+            <h2 className="text-3xl font-bold">
+              {summary_absent}
+            </h2>
+            <span className="text-md font-medium">Absent</span>
           </div>
 
           <div className="w-[40px] h-[47px] rounded-full bg-[#038000] flex justify-center items-center text-xl">
@@ -200,8 +103,8 @@ const AdminDashboard = () => {
 
         <div className="flex justify-between items-center p-5 bg-[#ecebff] rounded-md gap-3">
           <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-            <h2 className="text-3xl font-bold">54</h2>
-            <span className="text-md font-medium">Nghỉ</span>
+            <h2 className="text-3xl font-bold">{summary_late}</h2>
+            <span className="text-md font-medium">Late</span>
           </div>
 
           <div className="w-[40px] h-[47px] rounded-full bg-[#0200f8] flex justify-center items-center text-xl">
@@ -211,22 +114,13 @@ const AdminDashboard = () => {
       </div>
 
       <div className="w-full flex flex-wrap mt-7">
-        <div className="w-full lg:w-7/12 lg:pr-3">
-          <div className="w-full bg-[#6a5fdf] p-4 rounded-md">
-            <Chart
-              options={state.options}
-              series={state.series}
-              type="bar"
-              height={350}
-            />
-          </div>
-        </div>
+        <ChartAttendance />
 
         <div className="w-full lg:w-5/12 lg:pl-4 mt-6 lg:mt-0">
           <div className="w-full bg-[#6a5fdf] p-4 rounded-md text-[#d0d2d6]">
             <div className="flex justify-between items-center">
               <h2 className="font-semibold text-lg text-[#d0d2d6] pb-3">
-                Recent Seller Message
+                Recent Leave Request
               </h2>
               <Link
                 to="/admin/dashboard/employee-request"
@@ -237,69 +131,35 @@ const AdminDashboard = () => {
             </div>
             <div className="flex flex-col gap-2 pt-6 text-[#d0d2d6]">
               <ol className="relative border-1 border-slate-600 ml-4">
-                <li className="mb-3 ml-6">
-                  <div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#4c7fe2] rounded-full z-10">
-                    <img
-                      className="w-full rounded-full h-full shadow-lg"
-                      src="http://localhost:3000/images/admin.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-sm">
-                    <div className="flex justify-between items-center mb-2">
-                      <Link className="text-md font-normal">Admin</Link>
-                      <time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
-                        {' '}
-                        2 day ago
-                      </time>
-                    </div>
-                    <div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-                      How Are you
-                    </div>
-                  </div>
-                </li>
-                <li className="mb-3 ml-6">
-                  <div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#4c7fe2] rounded-full z-10">
-                    <img
-                      className="w-full rounded-full h-full shadow-lg"
-                      src="http://localhost:3000/images/admin.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-sm">
-                    <div className="flex justify-between items-center mb-2">
-                      <Link className="text-md font-normal">Admin</Link>
-                      <time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
-                        {' '}
-                        2 day ago
-                      </time>
-                    </div>
-                    <div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-                      How Are you
-                    </div>
-                  </div>
-                </li>
-                <li className="mb-3 ml-6">
-                  <div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#4c7fe2] rounded-full z-10">
-                    <img
-                      className="w-full rounded-full h-full shadow-lg"
-                      src="http://localhost:3000/images/admin.jpg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-sm">
-                    <div className="flex justify-between items-center mb-2">
-                      <Link className="text-md font-normal">Admin</Link>
-                      <time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
-                        {' '}
-                        2 day ago
-                      </time>
-                    </div>
-                    <div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
-                      How Are you
-                    </div>
-                  </div>
-                </li>
+                {filteredRequests.map((request, i) => {
+                  return (
+                    <li key={i} className="mb-3 ml-6">
+                      <div className="flex absolute -left-5 shadow-lg justify-center items-center w-10 h-10 p-[6px] bg-[#4c7fe2] rounded-full z-10">
+                        <img
+                          className="w-full rounded-full h-full shadow-lg"
+                          src="http://localhost:3000/images/admin.jpg"
+                          alt=""
+                        />
+                      </div>
+                      <div className="p-3 bg-slate-800 rounded-lg border border-slate-600 shadow-sm">
+                        <div className="flex justify-between items-center mb-2">
+                          <Link className="text-md font-normal">
+                            {request.id_employee}
+                          </Link>
+                          <time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
+                            {format(
+                              new Date(request.request_date),
+                              'dd/MM/yyyy'
+                            )}
+                          </time>
+                        </div>
+                        <div className="p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800">
+                          {request.request_type}
+                        </div>
+                      </div>
+                    </li>
+                  )
+                })}
               </ol>
             </div>
           </div>
@@ -309,10 +169,10 @@ const AdminDashboard = () => {
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
         <div className="flex justify-between items-center">
           <h2 className=" font-semibold text-lg text-[#d0d2d6] pb-3 ">
-            Attandance
+            Attandance Today
           </h2>
           <div className="flex justify-end items-center">
-            <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
+            {/* <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
               <div className="flex flex-col w-full gap-1 relative">
                 <input
                   readOnly
@@ -388,7 +248,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="relative overflow-x-auto">
@@ -396,55 +256,40 @@ const AdminDashboard = () => {
             <thead className="text-sm text-[#d0d2d6] uppercase border-b border-slate-700">
               <tr>
                 <th scope="col" className="py-3 px-4">
-                  Order Id
+                  #
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Price
+                  ID Employee
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Payment Status
+                  Name
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Order Status
+                  Check In
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Active
+                  Check Out
                 </th>
               </tr>
             </thead>
             <tbody>
-              {[1, 2, 3, 4, 5].map((d, i) => (
+              {attendances.map((d, i) => (
                 <tr key={i}>
-                  <td
-                    scope="row"
-                    className="py-3 px-4 font-medium whitespace-nowrap"
-                  >
-                    #34344
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">
+                    {i + 1}
                   </td>
-                  <td
-                    scope="row"
-                    className="py-3 px-4 font-medium whitespace-nowrap"
-                  >
-                    $454
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">
+                    {d.id_employee}
                   </td>
-                  <td
-                    scope="row"
-                    className="py-3 px-4 font-medium whitespace-nowrap"
-                  >
-                    Pending
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">
+                    {d.employee_name}
                   </td>
-                  <td
-                    scope="row"
-                    className="py-3 px-4 font-medium whitespace-nowrap"
-                  >
-                    Pending
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">
+                    {d.time_in}
                   </td>
 
-                  <td
-                    scope="row"
-                    className="py-3 px-4 font-medium whitespace-nowrap"
-                  >
-                    <Link>View</Link>{' '}
+                  <td className="py-3 px-4 font-medium whitespace-nowrap">
+                    {d.time_out}
                   </td>
                 </tr>
               ))}

@@ -22,7 +22,7 @@ const AddProduct = () => {
   ]
 
   const roles = [
-    { id_role: 1, name: 'admin' },
+    
     { id_role: 2, name: 'employee' },
   ]
 
@@ -127,9 +127,7 @@ const AddProduct = () => {
           <Link
             to="/admin/dashboard/employees"
             className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-sm px-7 py-2 my-2"
-          >
-            All Employee
-          </Link>
+          ></Link>
         </div>
         <div>
           <form onSubmit={addEmployee}>
@@ -373,7 +371,7 @@ const AddProduct = () => {
 
             <div className="flex">
               <button className="bg-red-500  hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
-                Add Product
+                Add
               </button>
             </div>
           </form>

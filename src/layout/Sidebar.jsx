@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { getNav } from '../navigation/index'
 import { IoLogOutOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
+import Cookies from 'js-cookie'
 
 const Sidebar = ({ showSidebar, setShowSidebar }) => {
   const dispatch = useDispatch()
@@ -15,6 +16,13 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
     const navs = getNav(role)
     setAllNav(navs)
   }, [role])
+
+  const handleLogout = (e) => {
+    e.preventDefault()
+    localStorage.removeItem('access_token')
+    Cookies.remove('access_token')
+    window.location.href = '/auth/login'
+  }
 
   return (
     <div>
@@ -64,7 +72,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
                 <span>
                   <IoLogOutOutline />
                 </span>
-                <span>Log Out</span>
+                <span onClick={handleLogout}>Log Out</span>
               </button>
             </li>
           </ul>

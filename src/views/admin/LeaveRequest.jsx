@@ -6,6 +6,7 @@ import Search from '../components/Search'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
 import LeaveRequestDetail from './LeaveRequestDetail'
+import { get_employee_by_id } from '../../store/Reducers/employeeReducer'
 
 const LeaveRequest = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -15,12 +16,14 @@ const LeaveRequest = () => {
 
   const dispatch = useDispatch()
   const { leaverequests } = useSelector((state) => state.leaverequest)
+  
 
   console.log(leaverequests)
 
   useEffect(() => {
     dispatch(get_leaverequests())
   }, [dispatch])
+
 
   return (
     <div className="px-2 lg:px-7 pt-5">

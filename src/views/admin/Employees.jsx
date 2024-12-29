@@ -139,7 +139,7 @@ const Sellers = () => {
                   >
                     <div className="flex justify-start items-center gap-4">
                       <Link
-                        to={`/admin/dashboard/edit-employee/1`}
+                        to={`/admin/dashboard/edit-employee/${d.id}`}
                         className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50"
                       >
                         {' '}
