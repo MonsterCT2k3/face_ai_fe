@@ -11,11 +11,11 @@ import {
 
 const LeaveRequestDetail = () => {
   const dispatch = useDispatch()
-  const { leaverequests, successMessage } = useSelector(
+  const { leaverequests, successMessage, leaverequest } = useSelector(
     (state) => state.leaverequest
   )
 
-  console.log(leaverequests)
+  console.log(leaverequest)
   const { requestId } = useParams()
   const [status, setStatus] = useState('')
 
@@ -32,9 +32,9 @@ const LeaveRequestDetail = () => {
     }
   }, [successMessage, dispatch])
 
-  // useEffect(() => {
-  //   dispatch(get_leaverequest_by_id(Number(requestId)))
-  // }, [requestId, dispatch])
+  useEffect(() => {
+    dispatch(get_leaverequest_by_id(Number(requestId)))
+  }, [requestId, dispatch])
 
   const changeStatus = (status) => {
     console.log(status, requestId)

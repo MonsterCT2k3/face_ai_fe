@@ -16,7 +16,6 @@ const Sellers = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
   const [parPage, setParPage] = useState(5)
-  const [show, setShow] = useState(false)
 
   console.log(employees)
 
@@ -35,6 +34,8 @@ const Sellers = () => {
       dispatch(delete_employee(id))
     }
   }
+
+   const filteredEmployees = employees.filter((employee) => !employee.isAdmin)
 
   return (
     <div className="px-2 lg:px-7 pt-5">
@@ -80,7 +81,7 @@ const Sellers = () => {
             </thead>
 
             <tbody>
-              {employees.map((d, i) => (
+              {filteredEmployees.map((d, i) => (
                 <tr key={i}>
                   <td
                     // scope="row"

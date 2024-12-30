@@ -76,7 +76,9 @@ export const update_employee = createAsyncThunk(
       return rejectWithValue('No access token available') // Handle token absence
     }
     try {
-      const { data } = await api.put(`/employee/update/${id}`,dataObj, {
+      const { data } = await api.put(`/employee/update/${id}`,
+        dataObj, 
+        {
         headers: {
             Authorization: `Bearer ${token}`, // Add token to header
           },

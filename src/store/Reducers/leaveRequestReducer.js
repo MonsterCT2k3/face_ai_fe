@@ -33,18 +33,26 @@ export const update_status_leave_request = createAsyncThunk(
     }
     try {
       if (status === 'approve') {
-        const { data } = await api.post(`/leave_request/approve/${id}`,{}, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add token to header
+        const { data } = await api.post(
+          `/leave_request/approve/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token to header
+            },
           }
-        })
+        )
         return fulfillWithValue(data)
       } else {
-        const { data } = await api.post(`/leave_request/reject/${id}`,{}, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add token to header
-          },
-        })
+        const { data } = await api.post(
+          `/leave_request/reject/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add token to header
+            },
+          }
+        )
         return fulfillWithValue(data)
       }
     } catch (error) {
@@ -61,12 +69,16 @@ export const get_leaverequest_by_id = createAsyncThunk(
       return rejectWithValue('No access token available') // Handle token absence
     }
     try {
-      const { data } = await api.get(`/leave_request/${leaverequestId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to header
-        },
-        withCredentials: true,
-      })
+      const { data } = await api.get(
+        `/leave_request/employee_requests`,
+        leaverequestId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to header
+          },
+          withCredentials: true,
+        }
+      )
       console.log(data)
       return fulfillWithValue(data)
     } catch (error) {
@@ -101,6 +113,7 @@ export const leaverequestReducer = createSlice({
     loader: false,
     leaverequests: [],
     totalleaverequest: 0,
+    leaverequest: [],
   },
   reducers: {
     messageClear: (state, _) => {
@@ -139,6 +152,11 @@ export const leaverequestReducer = createSlice({
       .addCase(update_status_leave_request.rejected, (state, { payload }) => {
         state.loader = false
         // state.errorMessage = payload.error
+      })
+
+      .addCase(get_leaverequest_by_id.fulfilled, (state, { payload }) => {
+        state.loader = false
+        state.leaverequest = payload.data.result
       })
 
     // .addCase(

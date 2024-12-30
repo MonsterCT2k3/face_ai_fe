@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { get_department } from '../../store/Reducers/departmentReducer'
 import {
   get_employee_by_id,
   messageClear,
   update_employee,
 } from '../../store/Reducers/employeeReducer'
-import { PropagateLoader } from 'react-spinners'
-import { overrideStyle } from '../../utils/utils'
 import toast from 'react-hot-toast'
 
 const EditEmployee = () => {
   const { employeeId } = useParams()
 
   const dispatch = useDispatch()
-  
-  const {  successMessage, errorMessage, employee } = useSelector(
+
+  const { successMessage, errorMessage, employee } = useSelector(
     (state) => state.employee
   )
 
@@ -37,19 +34,18 @@ const EditEmployee = () => {
       toast.error(errorMessage)
       dispatch(messageClear())
     }
-  }, [dispatch])
+  }, [successMessage, errorMessage, dispatch])
 
   useEffect(() => {
     dispatch(get_employee_by_id(employeeId))
-  }, [employeeId, dispatch])
+  }, [employeeId])
 
   const [state, setState] = useState({
     name: '',
     username: '',
     email: '',
     phone: '',
-    id_employee: '',
-    department: '',
+    id_department: '',
     address: '',
     password: '',
   })
@@ -70,7 +66,7 @@ const EditEmployee = () => {
     if (departments.length > 0) {
       setalldepartment(departments)
     }
-  }, [departments])
+  }, [])
 
   const departmentSearch = (e) => {
     const value = e.target.value
@@ -84,7 +80,7 @@ const EditEmployee = () => {
       setalldepartment(departments)
     }
   }
-  console.log(state)
+
 
   useEffect(() => {
     setState({
@@ -92,37 +88,31 @@ const EditEmployee = () => {
       username: employee.username,
       email: employee.email,
       phone: employee.phone,
-      id_employee: employee.id,
+      id_department: null,
       department: employee.department,
       address: employee.address,
     })
     setDepartment(employee.department)
+    if (employee.department) {
+      const department = departments.find((d) => d.name === employee.department)
+      console.log(department)
+      setState((prevState) => ({
+        ...prevState,
+        id_department: department.id_department,
+      }))
+      console.log(state)
+    }
   }, [employee])
-
-  useEffect(() => {
-    if (successMessage) {
-      toast.success(successMessage)
-      dispatch(messageClear())
-      setState({
-        name: '',
-        username: '',
-        email: '',
-        phone: '',
-        id_employee: '',
-        department: '',
-        address: '',
-      })
-      setDepartment('')
-    }
-    if (errorMessage) {
-      toast.error(errorMessage)
-      dispatch(messageClear())
-    }
-  }, [successMessage, errorMessage, dispatch])
 
   const update = (e) => {
     e.preventDefault()
-    dispatch(update_employee({ id: employeeId, data: state }))
+    // Tạo bản sao state và loại bỏ trường 'department'
+    const updatedState = { ...state }
+    delete updatedState.department
+    console.log(updatedState)
+
+    // Dispatch action với dữ liệu đã chỉnh sửa
+    dispatch(update_employee({ id: employeeId, data: updatedState }))
   }
 
   return (
@@ -194,19 +184,6 @@ const EditEmployee = () => {
             </div>
 
             <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
-              <div className="flex flex-col w-full gap-1">
-                <label htmlFor="id">ID Employee</label>
-                <input
-                  className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
-                  onChange={inputHandle}
-                  value={state.id_employee}
-                  type="text"
-                  name="id"
-                  id="id"
-                  placeholder="Id Employee"
-                />
-              </div>
-
               <div className="flex flex-col w-full gap-1 relative">
                 <label htmlFor="department">Department</label>
                 <input
@@ -244,6 +221,10 @@ const EditEmployee = () => {
                         onClick={() => {
                           setdepartmentShow(false)
                           setDepartment(c.name)
+                          setState((prevState) => ({
+                            ...prevState,
+                            id_department: c.id_department, // Thêm id_department vào state
+                          }))
                           setSearchValue('')
                           setalldepartment(departments)
                         }}
