@@ -54,7 +54,7 @@ const Sellers = () => {
                   No
                 </th>
                 <th scope="col" className="py-3 px-4">
-                  Username
+                  ID
                 </th>
                 <th scope="col" className="py-3 px-4">
                   Name
@@ -93,7 +93,7 @@ const Sellers = () => {
                     // scope="row"
                     className="py-1 px-4 font-medium whitespace-nowrap"
                   >
-                    {d.username}
+                    {d.id}
                   </td>
                   <td
                     // scope="row"

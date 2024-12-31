@@ -175,9 +175,7 @@ export const employeeReducer = createSlice({
       })
 
       .addCase(delete_employee.fulfilled, (state, action) => {
-        state.categories = state.categories.filter(
-          (cat) => cat._id !== action.meta.arg
-        )
+        
         state.successMessage = action.payload.message
       })
       .addCase(delete_employee.rejected, (state, action) => {
