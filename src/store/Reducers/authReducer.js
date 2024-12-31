@@ -49,13 +49,20 @@ const returnRole = (token) => {
   }
 }
 
+const returnUserInfo = (token) => {
+  if (token) {
+    const decodeToken = jwtDecode(token)
+    return decodeToken
+  }
+}
+
 export const authReducer = createSlice({
   name: 'auth',
   initialState: {
     successMessage: '',
     errorMessage: '',
     loader: false,
-    userInfo: '',
+    userInfo: {},
     id: '',
     role: returnRole(localStorage.getItem('access_token')),
     token: localStorage.getItem('access_token'),
@@ -72,6 +79,7 @@ export const authReducer = createSlice({
       })
       .addCase(admin_login.fulfilled, (state, { payload }) => {
         state.loader = false
+        console.log(payload)
         state.token = payload.access_token
         state.role = returnRole(payload.access_token)
         state.id = payload.id

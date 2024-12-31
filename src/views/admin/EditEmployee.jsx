@@ -17,6 +17,8 @@ const EditEmployee = () => {
     (state) => state.employee
   )
 
+  console.log(employee)
+
   const departments = [
     { id_department: 1, name: 'Phòng Quản Lý Đào Tạo' },
     { id_department: 2, name: 'Phòng Khảo Thí' },
@@ -112,7 +114,7 @@ const EditEmployee = () => {
     console.log(updatedState)
 
     // Dispatch action với dữ liệu đã chỉnh sửa
-    dispatch(update_employee({ id: employeeId, data: updatedState }))
+    dispatch(update_employee({ id: employeeId, dataObj: updatedState }))
   }
 
   return (

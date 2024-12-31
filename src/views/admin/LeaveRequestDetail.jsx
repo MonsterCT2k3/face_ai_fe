@@ -46,33 +46,35 @@ const LeaveRequestDetail = () => {
     <div className="px-2 lg:px-7 pt-5">
       <h1 className="text-[20px] font-bold mb-3"> Leave Request </h1>
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
-        {employee && (
-          <div className="w-full flex flex-wrap text-[#d0d2d6]">
+        {leaverequest && (
+          leaverequest.map((leaverequest,i) => {
+            return (
+              <div className="w-full flex flex-wrap text-[#d0d2d6]">
             <div className="w-4/12">
               <div className="px-0 md:px-5 py-2">
                 <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-[#9e97e9] rounded-md">
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Name : </span>
-                    <span>Raju Khan </span>
+                    <span>{leaverequest.name} </span>
                   </div>
 
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Request date : </span>
-                    <span>{employee.request_day}</span>
+                    <span>{leaverequest.request_date}</span>
                   </div>
 
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Start date : </span>
-                    <span>{employee.start_date}</span>
+                    <span>{leaverequest.start_date}</span>
                   </div>
 
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>End date : </span>
-                    <span>{employee.end_date}</span>
+                    <span>{leaverequest.end_date}</span>
                   </div>
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Status : </span>
-                    <span>{employee.status}</span>
+                    <span>{leaverequest.status}</span>
                   </div>
                 </div>
               </div>
@@ -83,16 +85,18 @@ const LeaveRequestDetail = () => {
                 <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-[#9e97e9] rounded-md">
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Type : </span>
-                    <span>{employee.request_type}</span>
+                    <span>{leaverequest.request_type}</span>
                   </div>
                   <div className="flex gap-2 font-bold text-[#000000]">
                     <span>Reason : </span>
-                    <span>{employee.reason}</span>
+                    <span>{leaverequest.reason}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+            )
+          })
         )}
 
         <div className="px-4">

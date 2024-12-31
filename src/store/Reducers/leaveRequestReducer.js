@@ -31,26 +31,29 @@ export const update_status_leave_request = createAsyncThunk(
     if (!token) {
       return rejectWithValue('No access token available') // Handle token absence
     }
+    const requestid = Number(id)
     try {
       if (status === 'approve') {
         const { data } = await api.post(
-          `/leave_request/approve/${id}`,
-          {},
+          `/leave_request/approve/${requestid}`,
+          null,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add token to header
             },
+            withCredentials: true
           }
         )
         return fulfillWithValue(data)
       } else {
         const { data } = await api.post(
-          `/leave_request/reject/${id}`,
-          {},
+          `/leave_request/reject/${requestid}`,
+          null,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add token to header
             },
+            withCredentials: true
           }
         )
         return fulfillWithValue(data)
@@ -70,8 +73,7 @@ export const get_leaverequest_by_id = createAsyncThunk(
     }
     try {
       const { data } = await api.get(
-        `/leave_request/employee_requests`,
-        leaverequestId,
+        `/leave_request/get_request/${leaverequestId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add token to header
@@ -92,7 +94,7 @@ export const update_leaverequest = createAsyncThunk(
   async (product, { rejectWithValue, fulfillWithValue }) => {
     const { id } = product.id
     try {
-      const { data } = await api.post(`/leaverequest/update/${id}`, product, {
+      const { data } = await api.put(`/leave_request/update/${id}`, product, {
         withCredentials: true,
       })
       console.log(data)
@@ -156,7 +158,7 @@ export const leaverequestReducer = createSlice({
 
       .addCase(get_leaverequest_by_id.fulfilled, (state, { payload }) => {
         state.loader = false
-        state.leaverequest = payload.data.result
+        state.leaverequest = payload
       })
 
     // .addCase(

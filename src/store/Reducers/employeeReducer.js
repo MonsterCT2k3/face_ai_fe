@@ -75,8 +75,9 @@ export const update_employee = createAsyncThunk(
     if (!token) {
       return rejectWithValue('No access token available') // Handle token absence
     }
+    console.log(dataObj)
     try {
-      const { data } = await api.put(`/employee/update/${id}`,
+      const { data } = await api.post(`/employee/update/${id}`,
         dataObj, 
         {
         headers: {
@@ -101,9 +102,8 @@ export const delete_employee = createAsyncThunk(
       return rejectWithValue('No access token available') // Handle token absence
     }
     try {
-      const response = await api.post(
+      const response = await api.delete(
         `/employee/delete/${id}`,
-        {},
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add token to header
@@ -160,7 +160,7 @@ export const employeeReducer = createSlice({
 
       .addCase(update_employee.fulfilled, (state, { payload }) => {
         state.loader = false
-        state.successMessage = payload.data.message
+        state.successMessage = payload.message
         const index = state.employees.findIndex(
           (e) => e.id_employee === payload.data.employee.id_employee
         )

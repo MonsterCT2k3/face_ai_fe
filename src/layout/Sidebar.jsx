@@ -41,7 +41,7 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
         <div className="h-[70px] flex justify-center items-center">
           <Link to="/" className="w-[180px] h-[50px]">
             {/* <img className="w-full h-full" src="./public/images/logo.png" alt="logo" /> */}
-            <h1>ProsLight</h1>
+            <h1>Attendance System</h1>
           </Link>
         </div>
 

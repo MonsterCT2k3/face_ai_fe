@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Chart from 'react-apexcharts'
 import { get_attendances } from '../../store/Reducers/attendanceReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { da } from 'date-fns/locale'
 
 const ChartAttendance = () => {
   const dispatch = useDispatch()

@@ -81,7 +81,7 @@ const Sellers = () => {
             </thead>
 
             <tbody>
-              {filteredEmployees.map((d, i) => (
+              {employees.map((d, i) => (
                 <tr key={i}>
                   <td
                     // scope="row"
