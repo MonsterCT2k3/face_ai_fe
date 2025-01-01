@@ -1,20 +1,44 @@
 import React, { useEffect } from 'react'
 import { FaList } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { get_user_info } from '../store/Reducers/authReducer'
 import { get_employee_by_id } from '../store/Reducers/employeeReducer'
 
 const Header = ({ showSidebar, setShowSidebar }) => {
 
   const dispatch = useDispatch()
-  const { id} = useSelector(state => state.auth)
   const { employee} = useSelector(state => state.employee)
+
+  const id = localStorage.getItem("id")
 
   useEffect(() => {
     dispatch(get_employee_by_id(Number(id)))
-  }, [id])
+  }, [dispatch, id])
 
-  console.log(employee)
+  console.log(id)
+
+  const handleOpenDoor = async () => {
+    try {
+      const response = await fetch('http://192.168.0.108/open-door', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }), // Gửi `id` nếu cần
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        alert('Door opened successfully!')
+        console.log(data)
+      } else {
+        console.error('Failed to open door:', response.statusText)
+        alert('Failed to open door.')
+      }
+    } catch (error) {
+      console.error('Error opening door:', error)
+      alert('Error occurred while opening the door.')
+    }
+  }
 
   return (
     <div className="z-50 fixed top-0 left-0 w-full py-5 px-2 lg:px-7">
@@ -28,12 +52,9 @@ const Header = ({ showSidebar, setShowSidebar }) => {
           </span>
         </div>
         <div className="hidden md:block">
-          <input
-            type="text"
-            className="px-3 py-2 outline-none border bg-transparent border-slate-700 rounded-md text-[#121129] focus:border-indigo-500 overflow-hidden"
-            name="search"
-            placeholder="search"
-          />
+        <button onClick={handleOpenDoor} className="bg-green-500  hover:shadow-green-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
+                Open Door
+              </button>
         </div>
 
         <div className="flex justify-center items-center gap-8 relative ">

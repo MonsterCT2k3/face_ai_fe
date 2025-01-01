@@ -12,6 +12,7 @@ export const admin_login = createAsyncThunk(
       document.cookie = `access_token=${data.access_token}; path=/; max-age=${
         7 * 24 * 60 * 60
       }`
+      localStorage.setItem("id", data.id)
       localStorage.setItem('access_token', data.access_token)
       return fulfillWithValue(data)
     } catch (error) {
@@ -63,7 +64,7 @@ export const authReducer = createSlice({
     errorMessage: '',
     loader: false,
     userInfo: {},
-    id: '',
+    id: 1,
     role: returnRole(localStorage.getItem('access_token')),
     token: localStorage.getItem('access_token'),
   },
@@ -81,7 +82,6 @@ export const authReducer = createSlice({
         state.loader = false
         console.log(payload)
         state.token = payload.access_token
-        state.role = returnRole(payload.access_token)
         state.id = payload.id
         state.successMessage = 'Login success'
       })

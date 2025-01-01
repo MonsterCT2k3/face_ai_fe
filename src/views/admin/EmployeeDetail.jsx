@@ -75,10 +75,7 @@ const EmployeeDetail = () => {
           <h1 className="text-[#d0d2d6] text-xl font-semibold">
             Employee Detail
           </h1>
-          <Link
-            to="/admin/dashboard/employees"
-            className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-sm px-7 py-2 my-2"
-          ></Link>
+         <div></div>
         </div>
         <div>
           <form>

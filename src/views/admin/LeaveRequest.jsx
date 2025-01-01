@@ -21,8 +21,13 @@ const LeaveRequest = () => {
   console.log(leaverequests)
 
   useEffect(() => {
-    dispatch(get_leaverequests())
-  }, [dispatch])
+    const obj = {
+      parPage: parseInt(parPage),
+      page: parseInt(currentPage),
+      searchValue,
+    }
+    dispatch(get_leaverequests(obj))
+  }, [dispatch, currentPage, parPage, searchValue])
 
 
   return (

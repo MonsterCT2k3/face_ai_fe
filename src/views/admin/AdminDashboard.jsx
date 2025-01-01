@@ -43,7 +43,7 @@ const AdminDashboard = () => {
         searchValue: '',
       })
     )
-  }, [dispatch])
+  }, [])
 
   useEffect(() => {
     // Chuyển đổi startDate và endDate sang định dạng yyyy-mm-dd
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
       <div className="w-full flex flex-wrap mt-7">
         <ChartAttendance />
 
-        <div className="w-full lg:w-5/12 lg:pl-4 mt-6 lg:mt-0">
+        {/* <div className="w-full lg:w-5/12 lg:pl-4 mt-6 lg:mt-0">
           <div className="w-full bg-[#6a5fdf] p-4 rounded-md text-[#d0d2d6]">
             <div className="flex justify-between items-center">
               <h2 className="font-semibold text-lg text-[#d0d2d6] pb-3">
@@ -163,9 +163,10 @@ const AdminDashboard = () => {
               </ol>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
+      
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
         <div className="flex justify-between items-center">
           <h2 className=" font-semibold text-lg text-[#d0d2d6] pb-3 ">

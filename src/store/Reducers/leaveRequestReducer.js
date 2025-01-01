@@ -3,13 +3,15 @@ import api from '../../api/api'
 
 export const get_leaverequests = createAsyncThunk(
   'leaverequest/get_leaverequests',
-  async (_, { rejectWithValue }) => {
+  async ({ parPage, page, searchValue }, { rejectWithValue}) => {
     const token = localStorage.getItem('access_token')
     if (!token) {
       return rejectWithValue('No access token available') // Handle token absence
     }
     try {
-      const { data } = await api.get('/leave_request/getAll', {
+      const { data } = await api.get(
+        `/leave_request/getAll?page=${page}&&searchValue=${searchValue}&&perPage=${parPage}`,
+         {
         headers: {
           Authorization: `Bearer ${token}`, // Add token to header
         },
@@ -116,6 +118,7 @@ export const leaverequestReducer = createSlice({
     leaverequests: [],
     totalleaverequest: 0,
     leaverequest: [],
+    
   },
   reducers: {
     messageClear: (state, _) => {
@@ -127,7 +130,8 @@ export const leaverequestReducer = createSlice({
 
       .addCase(get_leaverequests.fulfilled, (state, { payload }) => {
         // state.totalleaverequest = payload.data.total
-        state.leaverequests = payload
+        state.leaverequests = payload.leave_requests
+
       })
 
       .addCase(update_leaverequest.fulfilled, (state, { payload }) => {
