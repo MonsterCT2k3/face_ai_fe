@@ -9,6 +9,7 @@ export const admin_login = createAsyncThunk(
       const { data } = await api.post('/auth/login', info, {
         withCredentials: true,
       })
+      console.log(data)
       document.cookie = `access_token=${data.access_token}; path=/; max-age=${
         7 * 24 * 60 * 60
       }`
@@ -64,9 +65,8 @@ export const authReducer = createSlice({
     errorMessage: '',
     loader: false,
     userInfo: {},
-    id: 1,
+    
     role: returnRole(localStorage.getItem('access_token')),
-    token: localStorage.getItem('access_token'),
   },
   reducers: {
     messageClear: (state, _) => {
@@ -78,12 +78,14 @@ export const authReducer = createSlice({
       .addCase(admin_login.pending, (state, { payload }) => {
         state.loader = true
       })
-      .addCase(admin_login.fulfilled, (state, { payload }) => {
-        state.loader = false
-        console.log(payload)
-        state.token = payload.access_token
-        state.id = payload.id
-        state.successMessage = 'Login success'
+      .addCase(admin_login.fulfilled, (state, action) => {
+        if (action) {
+          state.successMessage = 'Login successful 123';    // Thông báo thành công
+          console.log('Login payload:', action);       // Kiểm tra payload
+        } else {
+          // Trường hợp payload không có dữ liệu (hiếm gặp)
+          console.error('Login payload is empty or invalid');
+        }
       })
       .addCase(admin_login.rejected, (state, { payload }) => {
         state.loader = false

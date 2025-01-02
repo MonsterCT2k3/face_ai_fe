@@ -1,39 +1,18 @@
 import { FaUsers } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_employees } from '../../store/Reducers/employeeReducer'
-import { get_attendances } from '../../store/Reducers/attendanceReducer'
 import { format } from 'date-fns'
-import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
 import ChartAttendance from './Chart'
+import { get_attendances } from '../../store/Reducers/homeReducer'
 
 const AdminDashboard = () => {
   const dispatch = useDispatch()
   const { totalEmployee } = useSelector((state) => state.employee)
   const { attendances, summary_late, summary_absent, summary_worked } =
-    useSelector((state) => state.attendance)
+    useSelector((state) => state.home)
 
-  const { leaverequests } = useSelector((state) => state.leaverequest)
-  const [recentPendingRequests, setRecentPendingRequests] = useState([])
-  useEffect(() => {
-    dispatch(get_leaverequests())
-  }, [])
-
-  useEffect(() => {
-    // Lọc ra các yêu cầu nghỉ phép có status là "pending"
-    const pendingRequests = leaverequests.filter(
-      (request) => request.status === 'pending'
-    )
-
-    // Sắp xếp các yêu cầu nghỉ phép theo request_date từ mới nhất đến cũ nhất
-    const sortedRequests = pendingRequests.sort(
-      (a, b) => new Date(b.request_date) - new Date(a.request_date)
-    )
-
-    // Lấy 3 yêu cầu nghỉ phép gần nhất
-    setRecentPendingRequests(sortedRequests.slice(0, 3))
-  }, [leaverequests])
+  console.log(summary_absent, summary_worked, summary_absent)
 
   useEffect(() => {
     dispatch(
@@ -46,23 +25,17 @@ const AdminDashboard = () => {
   }, [])
 
   useEffect(() => {
-    // Chuyển đổi startDate và endDate sang định dạng yyyy-mm-dd
-    const formattedStartDate = format(new Date(), 'yyyy-MM-dd')
+   const formattedStartDate = format(new Date(), 'yyyy-MM-dd')
     const formattedEndDate = format(new Date(), 'yyyy-MM-dd')
-
     dispatch(
       get_attendances({
         startDate: formattedStartDate,
         endDate: formattedEndDate,
       })
     )
-  }, [dispatch])
+  }, [dispatch]);
 
-  const filteredRequests = leaverequests
-    .filter((request) => request.status === 'Pending') // Filter requests by status 'pending'
-    .sort((a, b) => new Date(b.request_date) - new Date(a.request_date)) // Sort by most recent request_date
-    .slice(0, 3) // Get the top 3 most recent requests
-
+ 
   return (
     <div className="px-2 md:px-7 py-5">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-7">

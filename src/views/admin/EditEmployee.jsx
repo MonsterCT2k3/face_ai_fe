@@ -30,11 +30,11 @@ const EditEmployee = () => {
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage)
-      dispatch(messageClear())
+      dispatch(messageClear)
     }
     if (errorMessage) {
       toast.error(errorMessage)
-      dispatch(messageClear())
+      dispatch(messageClear)
     }
   }, [successMessage, errorMessage, dispatch])
 

@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   delete_employee,
   get_employees,
+  messageClear,
 } from '../../store/Reducers/employeeReducer'
 import Search from '../components/Search'
+import toast from 'react-hot-toast'
 
 const Sellers = () => {
   const dispatch = useDispatch()
-  const { employees, totalEmployee } = useSelector((state) => state.employee)
+  const { employees, totalEmployee, successMessage, errorMessage } = useSelector((state) => state.employee)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [searchValue, setSearchValue] = useState('')
@@ -35,7 +37,18 @@ const Sellers = () => {
     }
   }
 
-   const filteredEmployees = employees.filter((employee) => !employee.isAdmin)
+  useEffect(() => {
+    if(successMessage) {
+      toast.success(successMessage)
+      dispatch(messageClear)
+    }
+    if (errorMessage) {
+      toast.error(errorMessage)
+      dispatch(messageClear)
+    }
+    
+  }, [dispatch, successMessage, errorMessage])
+
 
   return (
     <div className="px-2 lg:px-7 pt-5">

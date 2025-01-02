@@ -141,11 +141,12 @@ export const employeeReducer = createSlice({
       })
       .addCase(employee_add.rejected, (state, { payload }) => {
         state.loader = false
-        state.errorMessage = payload.error
+        state.errorMessage = payload.msg
       })
       .addCase(employee_add.fulfilled, (state, { payload }) => {
         state.loader = false
         state.successMessage = payload.msg
+        state.totalEmployee += 1
       })
 
       .addCase(get_employee_by_id.fulfilled, (state, { payload }) => {
@@ -161,12 +162,7 @@ export const employeeReducer = createSlice({
       .addCase(update_employee.fulfilled, (state, { payload }) => {
         state.loader = false
         state.successMessage = payload.message
-        const index = state.employees.findIndex(
-          (e) => e.id_employee === payload.data.employee.id_employee
-        )
-        if (index !== -1) {
-          state.employees[index] = payload.data.employee
-        }
+        
       })
 
       .addCase(update_employee.rejected, (state, { payload }) => {
@@ -174,9 +170,12 @@ export const employeeReducer = createSlice({
         state.errorMessage = payload
       })
 
-      .addCase(delete_employee.fulfilled, (state, action) => {
+      .addCase(delete_employee.fulfilled, (state, {payload, meta}) => {
         
-        state.successMessage = action.payload.message
+        state.successMessage = payload.message
+        state.totalEmployee -= 1
+        state.employees = state.employees.filter(employee => employee.id !== meta.arg)
+
       })
       .addCase(delete_employee.rejected, (state, action) => {
         state.errorMessage = action.payload

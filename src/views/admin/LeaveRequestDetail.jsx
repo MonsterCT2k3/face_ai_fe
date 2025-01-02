@@ -37,9 +37,15 @@ const LeaveRequestDetail = () => {
   }, [requestId, dispatch])
 
   const changeStatus = (status) => {
-    console.log(status, requestId)
-    const id = Number(requestId)
-    dispatch(update_status_leave_request({ status, id }))
+    const confirmation = window.confirm(`Are you sure you want to change the status to "${status}"?`);
+
+  if (confirmation) {
+    console.log(status, requestId);
+    const id = Number(requestId);
+    dispatch(update_status_leave_request({ status, id }));
+  } else {
+    console.log("Action cancelled by user");
+  }
   }
 
   return (
@@ -99,25 +105,36 @@ const LeaveRequestDetail = () => {
           })
         )}
 
-        <div className="px-4">
-          <div className="flex gap-4 py-3">
-            <button
-              onClick={() => changeStatus('reject')}
-              className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
-            >
-              Reject
-            </button>
-            <button
-              onClick={() => changeStatus('approve')}
-              // onClick={() =>
-              //   update_status_leave_request('approve', Number(requestId))
-              // }
-              className="bg-green-500 w-[170px] hover:shadow-green-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
-            >
-              Approve
-            </button>
-          </div>
-        </div>
+
+          {
+            leaverequest.map((leaverequest,i) => {
+              if (leaverequest.status === "depending" || leaverequest.status === "pending") {
+                return (
+                  <div className="px-4">
+                  <div className="flex gap-4 py-3">
+                    <button
+                      onClick={() => changeStatus('reject')}
+                      className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
+                    >
+                      Reject
+                    </button>
+                    <button
+                      onClick={() => changeStatus('approve')}
+                      // onClick={() =>
+                      //   update_status_leave_request('approve', Number(requestId))
+                      // }
+                      className="bg-green-500 w-[170px] hover:shadow-green-500/40 hover:shadow-md text-white rounded-md px-7 py-2"
+                    >
+                      Approve
+                    </button>
+                  </div>
+                </div>
+                )
+              } else {
+                return ''
+              }
+            })
+            }
       </div>
     </div>
   )

@@ -9,7 +9,8 @@ const Header = ({ showSidebar, setShowSidebar }) => {
   const { employee} = useSelector(state => state.employee)
 
   const id = localStorage.getItem("id")
-
+  // const {id } = useSelector(state => state.auth)
+  console.log(id)
   useEffect(() => {
     dispatch(get_employee_by_id(Number(id)))
   }, [dispatch, id])

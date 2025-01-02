@@ -19,8 +19,8 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
 
   const handleLogout = (e) => {
     e.preventDefault()
-    localStorage.removeItem('access_token')
     Cookies.remove('access_token')
+    localStorage.clear()
     window.location.href = '/auth/login'
   }
 

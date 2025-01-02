@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { addYears, format } from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
-import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_attendances } from '../../store/Reducers/attendanceReducer'
 
