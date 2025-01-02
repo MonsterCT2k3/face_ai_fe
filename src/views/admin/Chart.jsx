@@ -52,8 +52,11 @@ const AttendanceChart = () => {
       legend: {
         position: 'top',
         labels: {
-          color: '#d0d2d6',
-        },
+          color: 'black', // Đổi màu chữ thành đen
+          font: {
+            size: 16, // Tăng cỡ chữ
+          },
+        }
       },
     },
   };
@@ -109,13 +112,13 @@ const AttendanceChart = () => {
                 <p className="text-[#FF6347]">Absent: {summary_absent} ({((summary_absent / totalAttendance) * 100).toFixed(2)}%)</p>
               </div>
               <div className="flex justify-between">
-                <p className="text-[#FFEB3B]">Late: {summary_late} ({((summary_late / totalAttendance) * 100).toFixed(2)}%)</p>
+                <p className="text-orange-500">Late: {summary_late} ({((summary_late / totalAttendance) * 100).toFixed(2)}%)</p>
               </div>
               <div className="flex justify-between">
                 <p className="text-[#4CAF50]">On Time: {summary_worked} ({((summary_worked / totalAttendance) * 100).toFixed(2)}%)</p>
               </div>
               <div className="border-t border-[#ddd] pt-4 mt-4 text-center">
-                <p className="text-sm text-[#777]">Total Attendance: {totalAttendance}</p>
+                <p className="text-xl text-[#777]">Total Attendance: {totalAttendance}</p>
               </div>
             </div>
           </div>

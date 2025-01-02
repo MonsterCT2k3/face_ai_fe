@@ -17,6 +17,7 @@ const Header = ({ showSidebar, setShowSidebar }) => {
   console.log(id)
 
   const handleOpenDoor = async () => {
+    console.log("fsdfhsdf")
     try {
       const response = await fetch('http://192.168.0.108/open-door', {
         method: 'POST',
