@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get_leaverequests } from '../../store/Reducers/leaveRequestReducer'
 import LeaveRequestDetail from './LeaveRequestDetail'
 import { get_employee_by_id } from '../../store/Reducers/employeeReducer'
+import { format } from 'date-fns'
 
 const LeaveRequest = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -92,7 +93,7 @@ const LeaveRequest = () => {
                     // scope="row"
                     className="py-2 px-4 font-medium whitespace-nowrap"
                   >
-                    {d.request_date}
+                    {format(d.request_date, "yyyy-MM-dd")}
                   </td>
                   <td
                     // scope="row"

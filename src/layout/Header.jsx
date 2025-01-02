@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react'
 import { FaList } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { get_employee_by_id } from '../store/Reducers/employeeReducer'
+import { get_employee_by_id } from '../store/Reducers/homeReducer'
 
 const Header = ({ showSidebar, setShowSidebar }) => {
 
   const dispatch = useDispatch()
-  const { employee} = useSelector(state => state.employee)
+  const { employee} = useSelector(state => state.home)
 
   const id = localStorage.getItem("id")
-  // const {id } = useSelector(state => state.auth)
-  console.log(id)
   useEffect(() => {
     dispatch(get_employee_by_id(Number(id)))
   }, [dispatch, id])

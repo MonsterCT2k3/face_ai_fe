@@ -28,6 +28,21 @@ export const get_attendances = createAsyncThunk(
   }
 )
 
+export const get_employee_by_id = createAsyncThunk(
+  'home/get_employee_by_id',
+  async (employee_id, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.get(`/employee/${employee_id}`, {
+        withCredentials: true,
+      })
+      console.log(data)
+      return fulfillWithValue(data)
+    } catch (error) {
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
+
 
 
 export const homeReducer = createSlice({
@@ -44,6 +59,7 @@ export const homeReducer = createSlice({
     summary_late_detail: 0,
     summary_absent_detail: 0,
     summary_worked_detail: 0,
+    employee: ''
   },
   reducers: {
     messageClear: (state, _) => {
@@ -66,6 +82,11 @@ export const homeReducer = createSlice({
         state.loader = false
         state.errorMessage = payload.error
       })
+
+       .addCase(get_employee_by_id.fulfilled, (state, { payload }) => {
+          state.loader = false
+          state.employee = payload.employee
+        })
 
       
   },
